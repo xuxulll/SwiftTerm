@@ -96,7 +96,7 @@ open class TerminalView: NSView, NSTextInputClient, NSUserInterfaceValidations, 
     var terminal: Terminal!
 
     var selection: SelectionService!
-    private var scroller: NSScroller!
+    public var scroller: NSScroller!
     
     // Attribute dictionary, maps a console attribute (color, flags) to the corresponding dictionary
     // of attributes for an NSAttributedString
@@ -297,13 +297,13 @@ open class TerminalView: NSView, NSTextInputClient, NSUserInterfaceValidations, 
     
     func setupScroller()
     {
-        let style: NSScroller.Style = .legacy
+        let style: NSScroller.Style = NSScroller.isCompatibleWithOverlayScrollers ? .overlay : .legacy
         let scrollerWidth = NSScroller.scrollerWidth(for: .regular, scrollerStyle: style)
         scroller = NSScroller(frame: NSRect(x: bounds.maxX - scrollerWidth, y: 0, width: scrollerWidth, height: bounds.height))
         scroller.autoresizingMask = [.minXMargin, .height]
         scroller.scrollerStyle = style
         scroller.knobProportion = 0.1
-        scroller.isEnabled = false
+        scroller.isEnabled = true
         addSubview (scroller)
         scroller.action = #selector(scrollerActivated)
         scroller.target = self
